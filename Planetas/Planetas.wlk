@@ -2,6 +2,8 @@ class Persona{
     var monedas = 20
     var property edad //es metodo y variable al mismo tiempo. ejemplo.edad(x) para modificarlo
 
+    method trabajar(tiempo,planeta)
+
     method destacado(){
         return self.edadDestacada() && self.recursos() > 30
     }
@@ -68,6 +70,14 @@ class Planeta {
     method agregarConstruccion(construccion){
         construcciones.add(construccion)
     }
+
+    method delegacionTrabajar(tiempo) {
+        self.delegacionDiplomatica().forEach{delegado=>delegado.trabajar(tiempo,self)}
+    }
+
+    method invadir(planeta,tiempo){
+        planeta.delegacionDiplomatica().forEach{delegadoInvadido=>delegadoInvadido.trabajar(tiempo,self)}
+    }
 }
 
 /////////////////PRUEBA/////////////////////////////////////
@@ -114,7 +124,7 @@ class Productor inherits Persona(edad=50){ //Otra forma de darle valor a var her
     method aprender(tecnica){
         tecnicas.add(tecnica)
     }
-    method trabajar(tiempo,planeta){
+    override method trabajar(tiempo,planeta){
         if(planeta != viveEnPlaneta ){
             self.error("No vive en el planeta indicado")
         }
@@ -140,7 +150,7 @@ class Constructor inherits Persona{
         return cantidadConstrucciones > 5
     }
 
-    method trabajar(tiempo,planeta){
+    override method trabajar(tiempo,planeta){
         monedas = monedas -5
         viveEnRegion.trabajar(tiempo,planeta,self)
     }
@@ -178,7 +188,25 @@ class desierto{
 }
 
 
-////////////////PRUEBA////////////////////////////////
+///////////////////////////////PRUEBA////////////////////////////////////
+const Montania = new montania()
+const constructorUno = new Constructor(edad = 30, monedas = 100, cantidadConstrucciones = 3, viveEnRegion = Montania, inteligencia = 10)
+const constructorDos = new Constructor(edad = 40, monedas = 150, cantidadConstrucciones = 6, viveEnRegion = new costa(), inteligencia = 15)
+const constructorTres = new Constructor(edad = 35, monedas = 120, cantidadConstrucciones = 4, viveEnRegion = new llanura(), inteligencia = 12)
+const constructorCuatro = new Constructor(edad = 45, monedas = 180, cantidadConstrucciones = 7, viveEnRegion = new desierto(), inteligencia = 18)
 
+const productorUno = new Productor(edad = 50, monedas = 200, viveEnPlaneta = tierra)
+const productorDos = new Productor(edad = 55, monedas = 250, viveEnPlaneta = marte)
 
+/* constructorUno.trabajar(10, tierra)
+constructorDos.trabajar(15, marte)
+constructorTres.trabajar(12, tierra)
+constructorCuatro.trabajar(18, marte)
+
+productorUno.realizar(cultivo, 10)
+productorDos.realizar(cultivo, 15) 
+
+tierra.agregarConstruccion(new Muralla(longitud = 20))
+marte.agregarConstruccion(new Museo(superficie = 25, indiceDeImportancia = 2)) */
+////////////////////////////////////////////////////////////////////////
 object cultivo{} //para q reconozca la tecnica
